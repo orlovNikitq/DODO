@@ -1,61 +1,61 @@
 use Pizza
--- Предполагаем, что 2 - это идентификатор статуса "новый заказ"
+-- ГЏГ°ГҐГ¤ГЇГ®Г«Г ГЈГ ГҐГ¬, Г·ГІГ® 2 - ГЅГІГ® ГЁГ¤ГҐГ­ГІГЁГґГЁГЄГ ГІГ®Г° Г±ГІГ ГІГіГ±Г  "Г­Г®ГўГ»Г© Г§Г ГЄГ Г§"
 DECLARE @newOrderStatusId INT
 SET @newOrderStatusId = 2
 
--- Создание нового заказа для пользователя "user2"
+-- Г‘Г®Г§Г¤Г Г­ГЁГҐ Г­Г®ГўГ®ГЈГ® Г§Г ГЄГ Г§Г  Г¤Г«Гї ГЇГ®Г«ГјГ§Г®ГўГ ГІГҐГ«Гї "user2"
 DECLARE @clientId INT
 SELECT @clientId = id FROM _client WHERE login = 'user10'
 
--- Вставка нового заказа
+-- Г‚Г±ГІГ ГўГЄГ  Г­Г®ГўГ®ГЈГ® Г§Г ГЄГ Г§Г 
 INSERT INTO _order (id_client, id_status, finalcost)
-VALUES (@clientId, @newOrderStatusId, 0) -- Устанавливаем начальное значение для finalcost
+VALUES (@clientId, @newOrderStatusId, 0) -- Г“Г±ГІГ Г­Г ГўГ«ГЁГўГ ГҐГ¬ Г­Г Г·Г Г«ГјГ­Г®ГҐ Г§Г­Г Г·ГҐГ­ГЁГҐ Г¤Г«Гї finalcost
 
--- Получение идентификатора только что вставленного заказа
+-- ГЏГ®Г«ГіГ·ГҐГ­ГЁГҐ ГЁГ¤ГҐГ­ГІГЁГґГЁГЄГ ГІГ®Г°Г  ГІГ®Г«ГјГЄГ® Г·ГІГ® ГўГ±ГІГ ГўГ«ГҐГ­Г­Г®ГЈГ® Г§Г ГЄГ Г§Г 
 DECLARE @orderId INT
 SET @orderId = SCOPE_IDENTITY()
 
--- Добавление пиццы id 1
+-- Г„Г®ГЎГ ГўГ«ГҐГ­ГЁГҐ ГЇГЁГ¶Г¶Г» id 1
 INSERT INTO _pizza_order (id_order, id_pizza, size_pizza, size_testo)
 VALUES (@orderId, 1, 1, 1)
 
--- Добавление добавок к пицце id 1
+-- Г„Г®ГЎГ ГўГ«ГҐГ­ГЁГҐ Г¤Г®ГЎГ ГўГ®ГЄ ГЄ ГЇГЁГ¶Г¶ГҐ id 1
 INSERT INTO _addon_collection (id_order, id_pizza, id_addon_product, quantity)
 VALUES
     (@orderId, 1, 1, 2),
     (@orderId, 1, 3, 1)
 
--- Добавление пиццы id 4
+-- Г„Г®ГЎГ ГўГ«ГҐГ­ГЁГҐ ГЇГЁГ¶Г¶Г» id 4
 INSERT INTO _pizza_order (id_order, id_pizza, size_pizza, size_testo)
 VALUES (@orderId, 4, 1, 1)
 
--- Добавление добавок к пицце id 4
+-- Г„Г®ГЎГ ГўГ«ГҐГ­ГЁГҐ Г¤Г®ГЎГ ГўГ®ГЄ ГЄ ГЇГЁГ¶Г¶ГҐ id 4
 INSERT INTO _addon_collection (id_order, id_pizza, id_addon_product, quantity)
 VALUES
     (@orderId, 4, 4, 1),
     (@orderId, 4, 2, 1)
 
--- Добавление продукта id 2
+-- Г„Г®ГЎГ ГўГ«ГҐГ­ГЁГҐ ГЇГ°Г®Г¤ГіГЄГІГ  id 2
 INSERT INTO _product_order (id_order, id_product, quantity)
 VALUES (@orderId, 2, 5)
 
--- Добавление продукта id 4
+-- Г„Г®ГЎГ ГўГ«ГҐГ­ГЁГҐ ГЇГ°Г®Г¤ГіГЄГІГ  id 4
 INSERT INTO _product_order (id_order, id_product, quantity)
 VALUES (@orderId, 4, 2)
 
--- Добавление комбо id 1
+-- Г„Г®ГЎГ ГўГ«ГҐГ­ГЁГҐ ГЄГ®Г¬ГЎГ® id 1
 INSERT INTO _combo_order (id_order, id_combo, quantity)
 VALUES (@orderId, 1, 1)
 
--- Добавление комбо id 2
+-- Г„Г®ГЎГ ГўГ«ГҐГ­ГЁГҐ ГЄГ®Г¬ГЎГ® id 2
 INSERT INTO _combo_order (id_order, id_combo, quantity)
 VALUES (@orderId, 2, 1)
 
--- Добавление комбо id 3
+-- Г„Г®ГЎГ ГўГ«ГҐГ­ГЁГҐ ГЄГ®Г¬ГЎГ® id 3
 INSERT INTO _combo_order (id_order, id_combo, quantity)
 VALUES (@orderId, 3, 1)
 
--- Рассчитываем final_price
+-- ГђГ Г±Г±Г·ГЁГІГ»ГўГ ГҐГ¬ final_price
 ;WITH PizzaTotals AS (
     SELECT
         po.id_order,
@@ -91,6 +91,7 @@ ComboTotals AS (
         co.id_order = @orderId
 )
 UPDATE _order
+    SET date = GETDATE();
 SET finalcost = 
     COALESCE(
         (SELECT SUM(p.cost * po.quantity) FROM _product_order po JOIN _product p ON po.id_product = p.id WHERE po.id_order = @orderId), 0) +
@@ -107,7 +108,7 @@ SET finalcost =
 WHERE
     id = @orderId;
 
--- Выводим идентификатор заказа и итоговую сумму
+-- Г‚Г»ГўГ®Г¤ГЁГ¬ ГЁГ¤ГҐГ­ГІГЁГґГЁГЄГ ГІГ®Г° Г§Г ГЄГ Г§Г  ГЁ ГЁГІГ®ГЈГ®ГўГіГѕ Г±ГіГ¬Г¬Гі
 SELECT id, finalcost
 FROM _order
 WHERE id = @orderId;
