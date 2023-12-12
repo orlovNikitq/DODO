@@ -1,5 +1,4 @@
 ﻿use Pizza
--- Create _product table
 CREATE TABLE _product (
     id INT PRIMARY KEY,
     name NVARCHAR(50),
@@ -10,7 +9,6 @@ CREATE TABLE _product (
 	id_prefix INT
 );
 
--- Create _pizza table
 CREATE TABLE _pizza (
     id INT PRIMARY KEY,
     name NVARCHAR(50),
@@ -20,7 +18,7 @@ CREATE TABLE _pizza (
     id_prefix INT
 );
 
--- Create _pizza_order table
+
 CREATE TABLE _pizza_order (
     id_order INT,
     id_pizza INT,
@@ -28,7 +26,7 @@ CREATE TABLE _pizza_order (
     size_testo INT
 );
 
--- Create _order table
+
 CREATE TABLE _order (
     id INT PRIMARY KEY Identity (1,1),
     id_client INT,
@@ -44,7 +42,6 @@ CREATE TABLE _status (
     name NVARCHAR(50)    
 );
 
--- Create _client table
 CREATE TABLE _client (
     id INT PRIMARY KEY,
     id_area INT,
@@ -53,7 +50,7 @@ CREATE TABLE _client (
     adress NVARCHAR(50)
 );
 
--- Create _addon_product table
+
 CREATE TABLE _addon_product (
     id INT PRIMARY KEY,
     name NVARCHAR(50),
@@ -61,7 +58,7 @@ CREATE TABLE _addon_product (
     image NVARCHAR(50)
 );
 
--- Create _addon_collection table
+
 CREATE TABLE _addon_collection (
     id_order INT,
     id_pizza INT,
@@ -69,14 +66,12 @@ CREATE TABLE _addon_collection (
     quantity INT
 );
 
--- Create _product_order table
 CREATE TABLE _product_order (
     id_order INT,
     id_product INT,
     quantity INT
 );
 
--- Create _combo table
 CREATE TABLE _combo (
     id INT PRIMARY KEY,
     name NVARCHAR(50),
@@ -86,7 +81,7 @@ CREATE TABLE _combo (
     discription NVARCHAR(MAX)
 );
 
--- Create _product_combo table
+
 CREATE TABLE _product_combo (
     id_product INT,
     id_combo INT,
@@ -94,44 +89,43 @@ CREATE TABLE _product_combo (
     quantity INT
 );
 
--- Create _combo_order table
+
 CREATE TABLE _combo_order (
     id_order INT,
     id_combo INT,
     quantity INT
 );
 
--- Create _type_menu table
+
 CREATE TABLE _type_menu (
     id INT PRIMARY KEY,
     name NVARCHAR(50)
 );
 
--- Create _pizza_type_menu table
 CREATE TABLE _pizza_type_menu (
     id_pizza INT,
     id_type_menu INT
 );
 
--- Create _product_type_menu table
+
 CREATE TABLE _product_type_menu (
     id_product INT,
     id_type_menu INT
 );
 
--- Create _not_combo table
+
 CREATE TABLE _not_combo (
     id INT PRIMARY KEY,
     name NVARCHAR(50)
 );
 
--- Create _area table
+
 CREATE TABLE _area (
     id INT PRIMARY KEY,
     name NVARCHAR(50) UNIQUE
 );
 
--- Create _prefix table
+
 CREATE TABLE _prefix (
     id INT PRIMARY KEY,
     name NVARCHAR(50)
@@ -139,31 +133,29 @@ CREATE TABLE _prefix (
 ALTER TABLE _order
 ADD FOREIGN KEY (id_status) REFERENCES _status(id);
 
--- Add foreign key constraint to _product table
+
 ALTER TABLE _product
 ADD FOREIGN KEY (id_not_combo) REFERENCES _not_combo(id);
 
--- Add foreign key constraint to _pizza table
+
 ALTER TABLE _pizza
 ADD FOREIGN KEY (id_prefix) REFERENCES _prefix(id);
 
--- Add foreign key constraint to _pizza_order table
+
 ALTER TABLE _pizza_order
 ADD FOREIGN KEY (id_order) REFERENCES _order(id);
 ALTER TABLE _pizza_order
 ADD FOREIGN KEY (id_pizza) REFERENCES _pizza(id);
 
--- Add foreign key constraint to _order table
 ALTER TABLE _order
 ADD FOREIGN KEY (id_client) REFERENCES _client(id);
 ALTER TABLE _order
 ADD FOREIGN KEY (id_aria) REFERENCES _area(id);
 
--- Add foreign key constraint to _client table
+
 ALTER TABLE _client
 ADD FOREIGN KEY (id_area) REFERENCES _area(id);
 
--- Add foreign key constraint to _addon_collection table
 ALTER TABLE _addon_collection
 ADD FOREIGN KEY (id_order) REFERENCES _order(id);
 ALTER TABLE _addon_collection
@@ -171,31 +163,30 @@ ADD FOREIGN KEY (id_pizza) REFERENCES _pizza(id);
 ALTER TABLE _addon_collection
 ADD FOREIGN KEY (id_addon_product) REFERENCES _addon_product(id);
 
--- Add foreign key constraint to _product_order table
+
 ALTER TABLE _product_order
 ADD FOREIGN KEY (id_order) REFERENCES _order(id);
 ALTER TABLE _product_order
 ADD FOREIGN KEY (id_product) REFERENCES _product(id);
 
--- Add foreign key constraint to _product_combo table
 ALTER TABLE _product_combo
 ADD FOREIGN KEY (id_product) REFERENCES _product(id);
 ALTER TABLE _product_combo
 ADD FOREIGN KEY (id_combo) REFERENCES _combo(id);
 
--- Add foreign key constraint to _combo_order table
+
 ALTER TABLE _combo_order
 ADD FOREIGN KEY (id_order) REFERENCES _order(id);
 ALTER TABLE _combo_order
 ADD FOREIGN KEY (id_combo) REFERENCES _combo(id);
 
--- Add foreign key constraint to _pizza_type_menu table
+
 ALTER TABLE _pizza_type_menu
 ADD FOREIGN KEY (id_pizza) REFERENCES _pizza(id);
 ALTER TABLE _pizza_type_menu
 ADD FOREIGN KEY (id_type_menu) REFERENCES _type_menu(id);
 
--- Add foreign key constraint to _product_type_menu table
+
 ALTER TABLE _product_type_menu
 ADD FOREIGN KEY (id_product) REFERENCES _product(id);
 ALTER TABLE _product_type_menu
